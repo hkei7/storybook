@@ -26,7 +26,6 @@
   },
   "scripts": {
     "await-serve-storybooks": "wait-on http://localhost:8001",
-    "bootstrap": "node ../scripts/bootstrap.js",
     "build": "NODE_ENV=production node ../scripts/build-package.js",
     "changelog": "pr-log --sloppy --cherry-pick",
     "changelog:next": "pr-log --sloppy --since-prerelease",
