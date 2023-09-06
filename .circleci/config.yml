@@ -5,7 +5,7 @@ parameters:
     description: Which workflow to run
     type: enum
     enum: ['normal', 'merged', 'daily', 'skipped', 'docs']
-    default: 'skipped'
+    default: 'normal'
 
 executors:
   sb_node_16_classic:
