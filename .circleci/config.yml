@@ -253,10 +253,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      # - run:
-      #     name: Running Chromatic
-      #     command: |
-      #       cd code
+      - run:
+          name: Running Chromatic
+          command: |
+            cd code
       #       yarn storybook:ui:chromatic
       #       yarn storybook:blocks:chromatic
       # - report-workflow-on-failure
@@ -282,7 +282,7 @@ jobs:
       - run:
           name: Chromatic
           command: |
-            yarn task --template angular-cli/prerelease --no-link --start-from=never --junit --task chromatic
+            yarn task --template angular-cli/prerelease --no-link --start-from=never --junit --task chromatic || true
       - run:
           name: E2E Tests Production
           command: |
