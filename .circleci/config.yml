@@ -129,7 +129,7 @@ jobs:
           command: |
             cd code
             yarn local-registry --publish
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - save_cache:
           name: Save Yarn cache
           key: build-yarn-2-cache-v4--{{ checksum "code/yarn.lock" }}--{{ checksum "scripts/yarn.lock" }}
@@ -165,7 +165,7 @@ jobs:
           command: |
             cd code
             yarn lint
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - cancel-workflow-on-failure
   check:
     executor:
@@ -181,7 +181,7 @@ jobs:
           command: |
             yarn task --task check --start-from=auto --no-link --debug
             git diff --exit-code
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - cancel-workflow-on-failure
   script-checks:
     executor: sb_node_16_browsers
@@ -207,7 +207,7 @@ jobs:
             yarn test --coverage --ci
       - store_test_results:
           path: scripts/junit.xml
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - cancel-workflow-on-failure
   unit-tests:
     executor:
@@ -229,7 +229,7 @@ jobs:
           root: .
           paths:
             - code/coverage
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - cancel-workflow-on-failure
   coverage:
     executor:
@@ -241,7 +241,7 @@ jobs:
       - attach_workspace:
           at: .
       - codecov/upload
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
   chromatic-internal-storybooks:
     executor:
       class: medium+
@@ -259,7 +259,7 @@ jobs:
             cd code
             yarn storybook:ui:chromatic
             yarn storybook:blocks:chromatic
-      - report-workflow-on-failure
+      # - report-workflow-on-failure
       - store_test_results:
           path: test-results
   angular-prerelease-sandbox:
