@@ -65,22 +65,22 @@ commands:
             echo "Canceling workflow as previous step resulted in failure."
             echo "To execute all checks locally, please run yarn ci-tests"
             curl -X POST --header "Content-Type: application/json" "https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel?circle-token=${WORKFLOW_CANCELER}"
-  report-workflow-on-failure:
-    description: 'Reports failures to discord'
-    parameters:
-      template:
-        description: |
-          Which template to report in discord. Applicable for parallel sandbox jobs
-        type: string
-        default: 'none'
-    steps:
-      - run:
-          when: on_fail
-          command: git fetch --unshallow
-      - discord/status:
-          only_for_branches: main,next,next-release,latest-release
-          fail_only: true
-          failure_message: $(yarn get-report-message << pipeline.parameters.workflow >> << parameters.template >>)
+  # report-workflow-on-failure:
+  #   description: 'Reports failures to discord'
+  #   parameters:
+  #     template:
+  #       description: |
+  #         Which template to report in discord. Applicable for parallel sandbox jobs
+  #       type: string
+  #       default: 'none'
+  #   steps:
+  #     - run:
+  #         when: on_fail
+  #         command: git fetch --unshallow
+  #     - discord/status:
+  #         only_for_branches: main,next,next-release,latest-release
+  #         fail_only: true
+  #         failure_message: $(yarn get-report-message << pipeline.parameters.workflow >> << parameters.template >>)
 jobs:
   pretty-docs:
     executor:
@@ -295,8 +295,8 @@ jobs:
           name: Test Runner
           command: |
             yarn task --template angular-cli/prerelease --no-link --start-from=never --junit --task test-runner
-      - report-workflow-on-failure:
-          template: angular-cli/prerelease
+      # - report-workflow-on-failure:
+      #     template: angular-cli/prerelease
       - persist_to_workspace:
           root: .
           paths:
@@ -321,8 +321,8 @@ jobs:
       - run:
           name: Creating Sandboxes
           command: yarn task --task sandbox --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task sandbox) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task sandbox)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task sandbox)
       - persist_to_workspace:
           root: .
           paths:
@@ -345,8 +345,8 @@ jobs:
       - run:
           name: Smoke Testing Sandboxes
           command: yarn task --task smoke-test --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task smoke-test) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task smoke-test)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task smoke-test)
       - store_test_results:
           path: test-results
   build-sandboxes:
@@ -374,8 +374,8 @@ jobs:
           name: Verifying Telemetry
           command: yarn ts-node ./event-log-checker build $(yarn get-template --cadence << pipeline.parameters.workflow >> --task build)
           working_directory: scripts
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task build)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task build)
       - store_test_results:
           path: test-results
       - persist_to_workspace:
@@ -399,8 +399,8 @@ jobs:
       - run:
           name: Running Test Runner
           command: yarn task --task test-runner --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner)
       - store_test_results:
           path: test-results
   test-runner-dev:
@@ -419,8 +419,8 @@ jobs:
       - run:
           name: Running Test Runner in Dev mode
           command: yarn task --task test-runner-dev --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner-dev) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner-dev)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task test-runner-dev)
       - store_test_results:
           path: test-results
   chromatic-sandboxes:
@@ -438,8 +438,8 @@ jobs:
       - run:
           name: Running Chromatic
           command: yarn task --task chromatic --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task chromatic) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task chromatic)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task chromatic)
       - store_test_results:
           path: test-results
   e2e-production:
@@ -458,8 +458,8 @@ jobs:
       - run:
           name: Running E2E Tests
           command: yarn task --task e2e-tests --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests)
       - store_test_results:
           path: test-results
       - store_artifacts: # this is where playwright puts more complex stuff
@@ -481,8 +481,8 @@ jobs:
       - run:
           name: Running E2E Tests
           command: yarn task --task e2e-tests-dev --template $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests-dev) --no-link --start-from=never --junit
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests-dev)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task e2e-tests-dev)
       - store_test_results:
           path: test-results
       - store_artifacts: # this is where playwright puts more complex stuff
@@ -507,8 +507,8 @@ jobs:
       - run:
           name: Uploading results
           command: yarn upload-bench $(yarn get-template --cadence << pipeline.parameters.workflow >> --task bench)
-      - report-workflow-on-failure:
-          template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task bench)
+      # - report-workflow-on-failure:
+      #     template: $(yarn get-template --cadence << pipeline.parameters.workflow >> --task bench)
 
 workflows:
   docs:
