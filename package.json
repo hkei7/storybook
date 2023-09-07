@@ -13,5 +13,4 @@
     "upload-bench": "cd scripts; yarn upload-bench"
   },
   "packageManager": "yarn@3.5.1"
-
 }
